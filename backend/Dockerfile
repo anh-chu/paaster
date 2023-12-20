@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn:python3.11
+FROM flyingjoe/uvicorn-gunicorn-fastapi
 LABEL maintainer="Ward Pearce <wardpearce@pm.me>"
 
 COPY ./paaster /
