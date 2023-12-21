@@ -1,9 +1,8 @@
 from typing import cast
 
-from litestar import Litestar, Request, logging
+from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
 from litestar.datastructures import State
-from litestar.logging import LoggingConfig
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 from litestar.openapi.spec import Contact, License, Server
 from motor import motor_asyncio
@@ -25,13 +24,6 @@ class OpenAPIControllerRouteFix(OpenAPIController):
         self.path = path_copy
         return spotlight_elements
 
-logging_config = LoggingConfig(
-    root={"level": logging.getLevelName(logging.DEBUG), "handlers": ["queue_listener"]},
-    formatters={
-        "standard": {"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"}
-    },
-)
-
 app = Litestar(
     route_handlers=[router],
     state=State(
@@ -41,7 +33,6 @@ app = Litestar(
             )[SETTINGS.mongo.collection],
         }
     ),
-    logging_config=logging_config,
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.model_dump(),
         root_schema_site="elements",
@@ -63,9 +54,9 @@ app = Litestar(
             url="https://github.com/WardPearce/Paaster",
         ),
     ),
-    cors_config=CORSConfig(
-        allow_origins=[SETTINGS.proxy_urls.backend, SETTINGS.proxy_urls.frontend],
-        allow_credentials=True,
-    ),
+    # cors_config=CORSConfig(
+    #     allow_origins=[SETTINGS.proxy_urls.backend, SETTINGS.proxy_urls.frontend],
+    #     allow_credentials=True,
+    # ),
     type_encoders={BaseModel: lambda m: m.model_dump(by_alias=False)},
 )
