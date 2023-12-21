@@ -1,6 +1,6 @@
 from typing import cast
 
-from litestar import Litestar, Request
+from litestar import Litestar, Request, logging
 from litestar.config.cors import CORSConfig
 from litestar.datastructures import State
 from litestar.logging import LoggingConfig
