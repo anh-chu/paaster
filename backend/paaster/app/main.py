@@ -47,7 +47,7 @@ app = Litestar(
             )[SETTINGS.mongo.collection],
         }
     ),
-    # logging_config=logging_config,
+    logging_config=logging_config,
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.model_dump(),
         root_schema_site="elements",
