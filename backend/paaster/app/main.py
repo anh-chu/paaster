@@ -26,7 +26,7 @@ class OpenAPIControllerRouteFix(OpenAPIController):
         return spotlight_elements
 
 logging_config = LoggingConfig(
-    root={"level": logging.getLevelName(logging.DEBUG), "handlers": ["console"]},
+    root={"level": logging.getLevelName(logging.DEBUG), "handlers": ["queue_listener"]},
     formatters={
         "standard": {"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"}
     },
