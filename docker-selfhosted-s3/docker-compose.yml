@@ -10,8 +10,8 @@ services:
     container_name: paaster-backend
     image: wardpearce/paaster-backend:latest
     restart: unless-stopped
-    ports:
-      - "8888:80"
+    expose:
+      - "80"
     environment:
       paaster_max_paste_size: 1049000
       paaster_max_iv_size: 42
@@ -75,8 +75,8 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     command: minio server /data
-    ports:
-      - "9000:9000"
+    expose:
+      - "9000"
 
   paaster-minio-init:
     image: minio/mc
