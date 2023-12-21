@@ -1,8 +1,11 @@
+import logging
+
 from typing import cast
 
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
 from litestar.datastructures import State
+from litestar.logging import LoggingConfig
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 from litestar.openapi.spec import Contact, License, Server
 from motor import motor_asyncio
@@ -24,6 +27,27 @@ class OpenAPIControllerRouteFix(OpenAPIController):
         self.path = path_copy
         return spotlight_elements
 
+logging_config = LoggingConfig(
+    root={"level": logging.getLevelName(logging.DEBUG), "handlers": ["queue_listener"]},
+    formatters={
+        "standard": {
+            "format": "%(asctime)s loglevel=%(levelname)-6s logger=%(name)s %(funcName)s() L%(lineno)-4d %(message)s"
+        }
+    },
+    loggers={
+        "uvicorn.access": {
+            "propagate": False,
+            "filters": ["health_filter"],
+            "handlers": ["queue_listener"],
+        },
+        "uvicorn.error": {
+            "propagate": False,
+            "handlers": ["queue_listener"],
+        }
+    },
+)
+
+
 app = Litestar(
     route_handlers=[router],
     state=State(
@@ -33,6 +57,7 @@ app = Litestar(
             )[SETTINGS.mongo.collection],
         }
     ),
+    logging_config=logging_config,
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.model_dump(),
         root_schema_site="elements",
