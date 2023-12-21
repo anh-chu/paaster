@@ -27,24 +27,14 @@ class OpenAPIControllerRouteFix(OpenAPIController):
         self.path = path_copy
         return spotlight_elements
 
+
 logging_config = LoggingConfig(
     root={"level": logging.getLevelName(logging.DEBUG), "handlers": ["queue_listener"]},
     formatters={
         "standard": {
             "format": "%(asctime)s loglevel=%(levelname)-6s logger=%(name)s %(funcName)s() L%(lineno)-4d %(message)s"
         }
-    },
-    loggers={
-        "uvicorn.access": {
-            "propagate": False,
-            "filters": ["health_filter"],
-            "handlers": ["queue_listener"],
-        },
-        "uvicorn.error": {
-            "propagate": False,
-            "handlers": ["queue_listener"],
-        }
-    },
+    }
 )
 
 
